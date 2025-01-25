@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Крутой Музыкальный Сайт</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #1e3c72, #2a5298, #dd3e54, #6be585);
+            background-size: 400% 400%;
+            animation: gradient 20s ease infinite;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .dark-theme {
+            background: #121212;
+            color: #f0f0f0;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-bottom: 2px solid #fff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo img {
+            height: 60px;
+            border-radius: 15px;
+        }
+
+        .container {
+            padding: 20px;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .container h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-container input {
+            padding: 10px;
+            font-size: 1em;
+            width: 200px;
+            border-radius: 15px;
+            border: none;
+            outline: none;
+        }
+
+        .track-list {
+            list-style-type: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+            justify-items: center;
+        }
+
+        .track-list li {
+            text-align: center;
+        }
+
+        .cover {
+            width: 150px;
+            height: 150px;
+            background-color: #444;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .cover:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+        }
+
+        .player-container {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, #1e3c72, #2a5298);
+            padding: 20px;
+            color: white;
+            border-top: 3px solid #fff;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.7);
+        }
+
+        .player-container.active {
+            display: block;
+        }
+
+        .player-container h2 {
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.7);
+        }
+
+        .audio-player {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .controls button {
+            background: linear-gradient(45deg, #4c6ef5, #36a9e1);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .controls button:hover {
+            background: #5ca9f2;
+            transform: scale(1.1);
+        }
+
+        .controls button:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="https://via.placeholder.com/150x60" alt="Music Logo">
+        </div>
+    </header>
+    <div class="theme-toggle" onclick="toggleTheme()">🌙</div>
+    <div class="container">
+        <h1>Добро пожаловать на MusicSite</h1>
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Поиск по треку" oninput="searchTrack()">
+        </div>
+        <ul class="track-list" id="trackList">
+            <!-- Треки будут вставляться сюда динамически -->
+        </ul>
+    </div>
+    <div class="player-container" id="player">
+        <h2 id="now-playing">Now Playing: Трек 1</h2>
+        <audio id="audio-player" class="audio-player" controls>
+            <source src="" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+        <div class="controls">
+            <button onclick="previousTrack()">⏮</button>
+            <button onclick="togglePlay()" id="play-pause">⏯</button>
+            <button onclick="nextTrack()">⏭</button>
+        </div>
+    </div>
+
+    <script>
+        const tracks = [
+            { id: 1, name: "Трек 1", audioSrc: "https://example.com/track1.mp3", image: "https://via.placeholder.com/150?text=Track1" },
+            { id: 2, name: "Трек 2", audioSrc: "https://example.com/track2.mp3", image: "https://via.placeholder.com/150?text=Track2" },
+            { id: 3, name: "Трек 3", audioSrc: "https://example.com/track3.mp3", image: "https://via.placeholder.com/150?text=Track3" },
+            { id: 4, name: "Трек 4", audioSrc: "https://example.com/track4.mp3", image: "https://via.placeholder.com/150?text=Track4" },
+            { id: 5, name: "Трек 5", audioSrc: "https://example.com/track5.mp3", image: "https://via.placeholder.com/150?text=Track5" },
+            { id: 6, name: "Трек 6", audioSrc: "https://example.com/track6.mp3", image: "https://via.placeholder.com/150?text=Track6" },
+            { id: 7, name: "Трек 7", audioSrc: "https://example.com/track7.mp3", image: "https://via.placeholder.com/150?text=Track7" },
+            { id: 8, name: "Трек 8", audioSrc: "https://example.com/track8.mp3", image: "https://via.placeholder.com/150?text=Track8" },
+            { id: 9, name: "Трек 9", audioSrc: "https://example.com/track9.mp3", image: "https://via.placeholder.com/150?text=Track9" },
+            { id: 10, name: "Трек 10", audioSrc: "https://example.com/track10.mp3", image: "https://via.placeholder.com/150?text=Track10" },
+            { id: 11, name: "Трек 11", audioSrc: "https://example.com/track11.mp3", image: "https://via.placeholder.com/150?text=Track11" },
+            { id: 12, name: "Трек 12", audioSrc: "https://example.com/track12.mp3", image: "https://via.placeholder.com/150?text=Track12" },
+            { id: 13, name: "Трек 13", audioSrc: "https://example.com/track13.mp3", image: "https://via.placeholder.com/150?text=Track13" },
+            { id: 14, name: "Трек 14", audioSrc: "https://example.com/track14.mp3", image: "https://via.placeholder.com/150?text=Track14" },
+            { id: 15, name: "Трек 15", audioSrc: "https://example.com/track15.mp3", image: "https://via.placeholder.com/150?text=Track15" },
+            { id: 16, name: "Трек 16", audioSrc: "https://example.com/track16.mp3", image: "https://via.placeholder.com/150?text=Track16" },
+            { id: 17, name: "Трек 17", audioSrc: "https://example.com/track17.mp3", image: "https://via.placeholder.com/150?text=Track17" },
+            { id: 18, name: "Трек 18", audioSrc: "https://example.com/track18.mp3", image: "https://via.placeholder.com/150?text=Track18" },
+            { id: 19, name: "Трек 19", audioSrc: "https://example.com/track19.mp3", image: "https://via.placeholder.com/150?text=Track19" },
+            { id: 20, name: "Трек 20", audioSrc: "https://example.com/track20.mp3", image: "https://via.placeholder.com/150?text=Track20" },
+            { id: 21, name: "Трек 21", audioSrc: "https://example.com/track21.mp3", image: "https://via.placeholder.com/150?text=Track21" },
+            { id: 22, name: "Трек 22", audioSrc: "https://example.com/track22.mp3", image: "https://via.placeholder.com/150?text=Track22" },
+            { id: 23, name: "Трек 23", audioSrc: "https://example.com/track23.mp3", image: "https://via.placeholder.com/150?text=Track23" },
+            { id: 24, name: "Трек 24", audioSrc: "https://example.com/track24.mp3", image: "https://via.placeholder.com/150?text=Track24" },
+            { id: 25, name: "Трек 25", audioSrc: "https://example.com/track25.mp3", image: "https://via.placeholder.com/150?text=Track25" },
+            { id: 26, name: "Трек 26", audioSrc: "https://example.com/track26.mp3", image: "https://via.placeholder.com/150?text=Track26" },
+            { id: 27, name: "Трек 27", audioSrc: "https://example.com/track27.mp3", image: "https://via.placeholder.com/150?text=Track27" },
+            { id: 28, name: "Трек 28", audioSrc: "https://example.com/track28.mp3", image: "https://via.placeholder.com/150?text=Track28" },
+            { id: 29, name: "Трек 29", audioSrc: "https://example.com/track29.mp3", image: "https://via.placeholder.com/150?text=Track29" },
+            { id: 30, name: "Трек 30", audioSrc: "https://example.com/track30.mp3", image: "https://via.placeholder.com/150?text=Track30" }
+        ];
+
+        let currentTrack = 1;
+        const player = document.getElementById('player');
+        const nowPlaying = document.getElementById('now-playing');
+        const audioPlayer = document.getElementById('audio-player');
+        const playPauseButton = document.getElementById('play-pause');
+        const trackList = document.getElementById('trackList');
+        const searchInput = document.getElementById('search');
+
+        function displayTracks(tracks) {
+            trackList.innerHTML = '';
+            tracks.forEach(track => {
+                const trackItem = document.createElement('li');
+                trackItem.innerHTML = `
+                    <div class="cover" onclick="playTrack(${track.id})">
+                        <img src="${track.image}" alt="Track Cover ${track.id}">
+                    </div>
+                    <p>${track.name}</p>
+                `;
+                trackList.appendChild(trackItem);
+            });
+        }
+
+        displayTracks(tracks);
+
+        function playTrack(trackId) {
+            const track = tracks.find(t => t.id === trackId);
+            currentTrack = trackId;
+            nowPlaying.textContent = `Now Playing: ${track.name}`;
+            audioPlayer.src = track.audioSrc;
+            player.classList.add('active');
+            audioPlayer.play();
+        }
+
+        function togglePlay() {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                playPauseButton.textContent = '⏸';
+            } else {
+                audioPlayer.pause();
+                playPauseButton.textContent = '⏯';
+            }
+        }
+
+        function previousTrack() {
+            if (currentTrack > 1) {
+                playTrack(currentTrack - 1);
+            }
+        }
+
+        function nextTrack() {
+            if (currentTrack < tracks.length) {
+                playTrack(currentTrack + 1);
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const themeIcon = document.querySelector('.theme-toggle');
+            if (document.body.classList.contains('dark-theme')) {
+                themeIcon.textContent = '🌞';
+            } else {
+                themeIcon.textContent = '🌙';
+            }
+        }
+
+        function searchTrack() {
+            const query = searchInput.value.toLowerCase();
+            const filteredTracks = tracks.filter(track => track.name.toLowerCase().includes(query));
+            displayTracks(filteredTracks);
+        }
+    </script>
+</body>
+</html>
