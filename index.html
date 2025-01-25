@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мини-государство</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: linear-gradient(45deg, #2f2f2f, #111111);
+            animation: gradientBackground 10s ease infinite;
+        }
+
+        /* Анимация фона */
+        @keyframes gradientBackground {
+            0% { background: linear-gradient(45deg, #2f2f2f, #111111); }
+            50% { background: linear-gradient(45deg, #434343, #1a1a1a); }
+            100% { background: linear-gradient(45deg, #2f2f2f, #111111); }
+        }
+
+        /* Хедер */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        header h1 {
+            font-size: 40px;
+        }
+
+        header img {
+            width: 50px;
+            height: auto;
+        }
+
+        /* Навигация */
+        nav {
+            background-color: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 15px;
+        }
+
+        nav ul li {
+            margin: 0 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #0072ff;
+        }
+
+        /* Основной контент */
+        section {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        section h2 {
+            font-size: 35px;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: white;
+        }
+
+        section p {
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #ddd;
+        }
+
+        /* Карточки фич */
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            width: 250px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            font-size: 16px;
+            color: white;
+        }
+
+        /* Новости */
+        .news-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .news-item {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .news-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .news-item h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .news-item p {
+            font-size: 16px;
+            color: white;
+            line-height: 1.5;
+        }
+
+        .news-item a {
+            color: #0072ff;
+            font-weight: bold;
+            margin-top: 15px;
+            display: inline-block;
+            transition: color 0.3s ease;
+        }
+
+        .news-item a:hover {
+            color: #003a6c;
+        }
+
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 80%;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .modal button {
+            background-color: #0072ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal button:hover {
+            background-color: #003a6c;
+        }
+
+        /* Поддержка мобильных устройств */
+        @media (max-width: 768px) {
+            section {
+                padding: 40px 20px;
+            }
+
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .feature-card {
+                width: 80%;
+                margin-bottom: 30px;
+            }
+
+            .news-section {
+                grid-template-columns: 1fr;
+            }
+
+            .testimonials {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .testimonial-card {
+                width: 80%;
+                margin-bottom: 30px;
+            }
+        }
+
+        /* Отзывы */
+        .testimonials-section {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 60px 20px;
+            border-radius: 8px;
+            margin-top: 40px;
+        }
+
+        .testimonials-section h2 {
+            color: white;
+            font-size: 35px;
+            margin-bottom: 40px;
+        }
+
+        .testimonials {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .testimonial-card {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            width: 300px;
+            padding: 40px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .testimonial-card h3 {
+            font-size: 22px;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .testimonial-card p {
+            font-size: 16px;
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="https://raw.githubusercontent.com/KUKPOK48/SAERA/refs/heads/main/polotno.png" alt="Флаг страны">
+    <h1>SAERA</h1>
+</header>
+
+<nav>
+    <ul>
+        <li><a href="#home">Главная</a></li>
+        <li><a href="#about">О нас</a></li>
+        <li><a href="#features">Особенности</a></li>
+        <li><a href="#news">Новости</a></li>
+        <li><a href="#" onclick="openModal('laws-modal')">Законы</a></li>
+        <li><a href="#" onclick="openModal('history-modal')">История</a></li>
+    </ul>
+</nav>
+
+<section id="home">
+    <h2>Добро пожаловать в наше Cаера-государство</h2>
+    <p>Мы стремимся создать устойчивую и инновационную нацию, где каждый гражданин вносит свой вклад в развитие.</p>
+</section>
+
+<section id="about">
+    <h2>О нас</h2>
+    <p>Саера  — это место, где передовые идеи и технологии становятся частью повседневной жизни. В сотрудничестве с Tallinna Mustjõe Gümnaasium.</p>
+</section>
+
+<section id="features">
+    <h2>Особенности нашего государства</h2>
+    <div class="features">
+        <div class="feature-card">
+            <h3>Технологии</h3>
+            <p>Мы внедряем самые современные технологии для улучшения качества жизни наших граждан. За ваши деньги</p>
+        </div>
+        <div class="feature-card">
+            <h3>Образование</h3>
+            <p>Нашо образовательное учреждение предлагает уникальные возможности для развития.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Экология</h3>
+            <p>Мы заботимся об экологии и постоянно работаем над улучшением состояния окружающей среды.</p>
+        </div>
+    </div>
+</section>
+
+<section id="news">
+    <h2>Новости</h2>
+    <div class="news-section">
+        <div class="news-item">
+            <h3>Новая инициатива по защите окружающей среды</h3>
+            <p>Саера запустило новый проект по защите окружающей среды, целью которого является снижение уровня загрязнения воздуха.</p>
+            <a href="#" onclick="openModal('news-1')">Читать дальше</a>
+        </div>
+        <div class="news-item">
+            <h3>Новый закон о цифровых технологиях</h3>
+            <p>В Саера принят новый закон, который направлен на развитие цифровых технологий и их использование в государственной деятельности.</p>
+            <a href="#" onclick="openModal('news-2')">Читать дальше</a>
+        </div>
+        <div class="news-item">
+            <h3>Проект по улучшению системы здравоохранения</h3>
+            <p>Саера инвестирует в улучшение системы здравоохранения с целью повышения доступности медицинских услуг.</p>
+            <a href="#" onclick="openModal('news-3')">Читать дальше</a>
+        </div>
+        <div class="news-item">
+            <h3>Развитие городской инфраструктуры</h3>
+            <p>В Саера реализуется проект по модернизации городской инфраструктуры, включая дороги и общественные пространства.</p>
+            <a href="#" onclick="openModal('news-4')">Читать дальше</a>
+        </div>
+        <div class="news-item">
+            <h3>Образовательная реформа</h3>
+            <p>Саера запустило реформу образования, которая направлена на улучшение качества образования в школах и университетах.</p>
+            <a href="#" onclick="openModal('news-5')">Читать дальше</a>
+        </div>
+    </div>
+</section>
+
+<!-- Отзывы -->
+<section id="testimonials" class="testimonials-section">
+    <h2>Отзывы</h2>
+    <div class="testimonials">
+        <div class="testimonial-card">
+            <h3>Мария Иванов</h3>
+            <p>Саера отличная идея! Я горжусь тем, что стал частью этого проекта. Надеюсь на его дальнейшее развитие.</p>
+        </div>
+        <div class="testimonial-card">
+            <h3>Жаба</h3>
+            <p>Sibul ja Сибуль</p>
+        </div>
+        <div class="testimonial-card">
+            <h3>Рита Никкел</h3>
+            <p>Никаких бюрократических препятствий! В мини-государстве люди могут легко и быстро решать свои вопросы. Только они предурашеные</p>
+        </div>
+    </div>
+</section>
+
+<!-- Модальные окна -->
+<div id="laws-modal" class="modal">
+    <div class="modal-content">
+        <h2>Законы нашего государства</h2>
+        <div class="laws-list">
+            <h3>1. Основные принципы:</h3>
+            <ul>
+                <li>1.1. Закон о гражданских правах и свободах.</li>
+                <li>1.2. Закон о праве на жизнь и безопасность.</li>
+                <li>1.3. Закон о свободе мысли и вероисповедания.</li>
+                <li>1.4. Закон о праве на личную неприкосновенность.</li>
+                <li>1.5. Закон о праве на участие в общественной жизни.</li>
+            </ul>
+
+            <h3>2. Экономика и финансы:</h3>
+            <ul>
+                <li>2.1. Закон о налогообложении.</li>
+                <li>2.2. Закон о защите прав потребителей.</li>
+                <li>2.3. Закон о праве на честную конкуренцию.</li>
+                <li>2.4. Закон о малом бизнесе и предпринимательской деятельности.</li>
+                <li>2.5. Закон о социальной ответственности бизнеса.</li>
+                <li>2.6. Закон о регулировании цен и тарифов.</li>
+                <li>2.7. Закон о финансировании государственного сектора.</li>
+                <li>2.8. Закон о денежных переводах и электронных платежах.</li>
+            </ul>
+
+            <h3>3. Труд и занятость:</h3>
+            <ul>
+                <li>3.1. Закон о трудовых правах.</li>
+                <li>3.2. Закон о минимальной заработной плате.</li>
+                <li>3.3. Закон о защите прав работников.</li>
+                <li>3.4. Закон о безработице и трудоустройстве.</li>
+                <li>3.5. Закон о пенсионном обеспечении.</li>
+                <li>3.6. Закон о социальной защите трудящихся.</li>
+                <li>3.7. Закон о недискриминации в трудовых отношениях.</li>
+                <li>3.8. Закон о профессиональном образовании и обучении.</li>
+            </ul>
+
+            <h3>4. Правосудие и безопасность:</h3>
+            <ul>
+                <li>4.1. Закон о судебной системе.</li>
+                <li>4.2. Закон о праве на справедливый суд.</li>
+                <li>4.3. Закон о борьбе с преступностью.</li>
+                <li>4.4. Закон о защите прав потерпевших.</li>
+                <li>4.5. Закон о праве на защиту.</li>
+                <li>4.6. Закон о тюремном содержании и реабилитации.</li>
+                <li>4.7. Закон о запрете пыток.</li>
+                <li>4.8. Закон о расследовании преступлений.</li>
+            </ul>
+
+            <h3>5. Семья и личные отношения:</h3>
+            <ul>
+                <li>5.1. Закон о браке и семейных отношениях.</li>
+                <li>5.2. Закон о защите прав детей.</li>
+                <li>5.3. Закон о разводе и имущественных спорах.</li>
+                <li>5.4. Закон о патронате и усыновлении.</li>
+                <li>5.5. Закон о праве на наследование.</li>
+                <li>5.6. Закон о равенстве полов в семье.</li>
+            </ul>
+
+            <h3>6. Окружающая среда:</h3>
+            <ul>
+                <li>6.1. Закон об охране окружающей среды.</li>
+                <li>6.2. Закон о предотвращении загрязнения.</li>
+                <li>6.3. Закон о защите природных ресурсов.</li>
+                <li>6.4. Закон о устойчивом развитии.</li>
+                <li>6.5. Закон о поддержке экологических инициатив.</li>
+                <li>6.6. Закон о сохранении биоразнообразия.</li>
+                <li>6.7. Закон о управлении отходами.</li>
+                <li>6.8. Закон о защите водных ресурсов.</li>
+            </ul>
+
+            <h3>7. Здравоохранение и социальная защита:</h3>
+            <ul>
+                <li>7.1. Закон о доступном медицинском обслуживании.</li>
+                <li>7.2. Закон о медицинской страховке.</li>
+                <li>7.3. Закон о праве на психическое здоровье.</li>
+                <li>7.4. Закон о защите прав инвалидов.</li>
+                <li>7.5. Закон о социальной поддержке малоимущих.</li>
+                <li>7.6. Закон о бесплатных медицинских услугах для детей.</li>
+                <li>7.7. Закон о профилактике заболеваний.</li>
+                <li>7.8. Закон о страховании от несчастных случаев.</li>
+            </ul>
+
+            <h3>8. Образование и культура:</h3>
+            <ul>
+                <li>8.1. Закон об обязательном образовании.</li>
+                <li>8.2. Закон о праве на свободный доступ к знаниям.</li>
+                <li>8.3. Закон о поддержке культурных инициатив.</li>
+                <li>8.4. Закон о правах студентов.</li>
+                <li>8.5. Закон о защите культурного наследия.</li>
+                <li>8.6. Закон о национальных языках и их использовании.</li>
+                <li>8.7. Закон о культурных обменах.</li>
+                <li>8.8. Закон о публичных библиотеках.</li>
+            </ul>
+
+            <h3>9. Политика и участие граждан:</h3>
+            <ul>
+                <li>9.1. Закон о выборах и избирательном праве.</li>
+                <li>9.2. Закон о свободе собраний и митингов.</li>
+                <li>9.3. Закон о праве на объединение и создание политических партий.</li>
+                <li>9.4. Закон о праве на протест.</li>
+                <li>9.5. Закон о праве на обращение к государственным органам.</li>
+                <li>9.6. Закон о праве на участие в референдумах.</li>
+                <li>9.7. Закон о честности и прозрачности выборов.</li>
+                <li>9.8. Закон о защите прав оппозиции.</li>
+            </ul>
+
+            <h3>10. Технологии и инновации:</h3>
+            <ul>
+                <li>10.1. Закон о защите данных и конфиденциальности.</li>
+                <li>10.2. Закон о цифровых правах граждан.</li>
+                <li>10.3. Закон о развитии искусственного интеллекта.</li>
+                <li>10.4. Закон о защите прав в интернете.</li>
+                <li>10.5. Закон о кибербезопасности.</li>
+                <li>10.6. Закон о цифровой идентификации.</li>
+                <li>10.7. Закон о поддержке инновационных стартапов.</li>
+                <li>10.8. Закон о регулировании социальных сетей.</li>
+            </ul>
+
+            <h3>11. Международные отношения:</h3>
+            <ul>
+                <li>11.1. Закон о внешней политике.</li>
+                <li>11.2. Закон о дипломатических отношениях.</li>
+                <li>11.3. Закон о международных договорах.</li>
+                <li>11.4. Закон о помощи развивающимся странам.</li>
+                <li>11.5. Закон о праве на убежище и беженцев.</li>
+                <li>11.6. Закон о миротворческой деятельности.</li>
+                <li>11.7. Закон о сотрудничестве с международными организациями.</li>
+                <li>11.8. Закон о соблюдении международных прав человека.</li>
+            </ul>
+
+            <h3>12. Инфраструктура и транспорт:</h3>
+            <ul>
+                <li>12.1. Закон о дорожном движении.</li>
+                <li>12.2. Закон о безопасности транспорта.</li>
+                <li>12.3. Закон о развитии общественного транспорта.</li>
+                <li>12.4. Закон о защите прав пассажиров.</li>
+                <li>12.5. Закон о транспортной инфраструктуре.</li>
+                <li>12.6. Закон о поддержке экологически чистых видов транспорта.</li>
+                <li>12.7. Закон о доступности транспорта для инвалидов.</li>
+                <li>12.8. Закон о международных транспортных перевозках.</li>
+            </ul>
+
+            <h3>13. Внешняя безопасность и оборона:</h3>
+            <ul>
+                <li>13.1. Закон о вооруженных силах.</li>
+                <li>13.2. Закон о национальной безопасности.</li>
+                <li>13.3. Закон о гражданской обороне.</li>
+                <li>13.4. Закон о защите государственных тайн.</li>
+                <li>13.5. Закон о предотвращении терроризма.</li>
+                <li>13.6. Закон о международной безопасности и сотрудничестве.</li>
+                <li>13.7. Закон о праве на оборону и сопротивление агрессии.</li>
+                <li>13.8. Закон о защите информации от внешних угроз.</li>
+            </ul>
+        </div>
+        <button onclick="closeModal('laws-modal')">Закрыть</button>
+    </div>
+</div>
+<div id="history-modal" class="modal">
+    <div class="modal-content">
+        <h2 style="text-align: center; font-size: 1.8em; margin-bottom: 1em;">История мини-государства Саера</h2>
+        <p style="line-height: 1.6; font-size: 1.1em; text-align: justify;">
+            <strong>23 декабря 2023 года</strong> произошло знаменательное событие — основание государства Саера. Его основательницей стала Милайна Зинкейвичус. Однако на момент основания Саера не имела ни названия, ни флага, ни других атрибутов государственности. Численность населения составляла всего 21 человек, но это было только начало.
+        </p>
+        <p style="line-height: 1.6; font-size: 1.1em; text-align: justify;">
+            <strong>12 февраля 2023 года</strong> на политической арене появился Даниил Крахин, выдвинувший свою кандидатуру на пост президента. Выборы того года вошли в историю своей жестокостью и накалом страстей. На следующий день, <strong>13 февраля 2024 года</strong>, Даниил Крахин одержал победу и стал первым официальным президентом Саеры. Под его руководством страна обрела флаг и, наконец, своё имя. Его усилия привели к значительному развитию государства, укреплению его позиций и влияния. Даниил Крахин навсегда вписал своё имя в историю Саеры как легендарный лидер.
+        </p>
+        <p style="line-height: 1.6; font-size: 1.1em; text-align: justify;">
+            <strong>27 апреля 2024 года</strong> Марк Газета заявил о своих амбициях занять пост президента. Несмотря на свои амбициозные планы, ему так и не удалось реализовать задуманное. Однако через два дня, <strong>29 апреля 2024 года</strong>, в борьбу за президентство вступил Даниил Майцев, который сумел стать президентом. Но его правление оказалось кратковременным — вскоре он был снят с должности.
+        </p>
+        <p style="line-height: 1.6; font-size: 1.1em; text-align: justify;">
+            <strong>6 мая 2024 года</strong> Даниил Крахин принял неожиданное решение передать президентство Марку Газете. Однако уже <strong>16 мая 2024 года</strong> по итогам голосования президентом стала Лаура Егорова. Она внесла серьёзные изменения, включая смену флага страны.
+        </p>
+        <p style="line-height: 1.6; font-size: 1.1em; text-align: justify;">
+            <strong>26 мая 2024 года</strong> Марк Газета вновь заявил о своих президентских амбициях. Несмотря на то, что по результатам голосования он лидировал, его репутация была подорвана. Дважды он пытался подделать голоса, а на третий раз был окончательно дисквалифицирован.
+        </p>
+        <p style="line-height: 1.6; font-size: 1.1em; text-align: justify;">
+            Тем не менее, Марк Газета не сдавался. <strong>3 июня 2024 года</strong> он снова выдвинул свою кандидатуру и на этот раз сумел одержать победу. Его восхождение на пост президента оказалось неожиданным поворотом для всей страны.
+        </p>
+        <p style="line-height: 1.6; font-size: 1.1em; text-align: justify;">
+            Однако Саера не смогла удержать свою стабильность. <strong>22 июля 2024 года</strong> государство распалось. Но история на этом не закончилась. Уже <strong>25 января 2025 года</strong> начался процесс возрождения страны, который подарил народу надежду на новое будущее.
+        </p>
+        <button 
+            style="margin-top: 1.5em; padding: 0.7em 1.5em; font-size: 1em; background-color: #007BFF; color: #fff; border: none; border-radius: 5px; cursor: pointer;"
+            onclick="closeModal('history-modal')">
+            Закрыть
+        </button>
+    </div>
+</div>
+
+<div id="news-1" class="modal">
+    <div class="modal-content">
+        <h2>Новая инициатива по защите окружающей среды</h2>
+        <p>Новая инициатива по защите окружающей среды — шаг к чистой планете для будущих поколений.</p>
+        <button onclick="closeModal('news-1')">Закрыть</button>
+    </div>
+</div>
+
+<div id="news-2" class="modal">
+    <div class="modal-content">
+        <h2>Новый закон о цифровых технологиях</h2>
+        <p>купите</p>
+        <button onclick="closeModal('news-2')">Закрыть</button>
+    </div>
+</div>
+
+<div id="news-3" class="modal">
+    <div class="modal-content">
+        <h2>Проект по улучшению системы здравоохранения</h2>
+        <p>Вас лечит ваша мама?</p>
+        <button onclick="closeModal('news-3')">Закрыть</button>
+    </div>
+</div>
+
+<div id="news-4" class="modal">
+    <div class="modal-content">
+        <h2>Развитие городской инфраструктуры</h2>
+        <p>Мы не строили школу, и что с того? Это мешает?</p>
+        <button onclick="closeModal('news-4')">Закрыть</button>
+    </div>
+</div>
+
+<div id="news-5" class="modal">
+    <div class="modal-content">
+        <h2>Образовательная реформа</h2>
+        <p>в столовой теперь еще больше еды, и мы постараемся сохранить текущую столовую.</p>
+        <button onclick="closeModal('news-5')">Закрыть</button>
+    </div>
+</div>
+
+<script>
+    function openModal(modalId) {
+        document.getElementById(modalId).style.display = 'flex';
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
